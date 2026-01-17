@@ -1,8 +1,6 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <algorithm>
-#include <cctype>
 
 using namespace std;
 
@@ -10,7 +8,7 @@ string modName;
 string startMap;
 string trainMap;
 int typeMod;
-string anniv;
+char anniv;
 
 int main()
 {
@@ -30,23 +28,34 @@ int main()
     getline( cin, trainMap );
     cout << trainMap << "\n";
 
-    cout << "Is your mod made on the 25th anniversary update? y/n: \nIf you're not sure just pick yes." << endl;
-    getline( cin, anniv );
-    transform(anniv.begin(), anniv.end(), anniv.begin(),
-                   [](unsigned char c){ return tolower(c); });
-    cout << anniv << "\n";
+    while (true) {
+        cout << "Is your mod made on the 25th anniversary update? y/n: \nIf you're not sure just pick yes." << endl;
+        cin >> anniv;
 
-    do
-    {
-        cout << "What type of mod is it? \n1: Singleplayer \n2: Multiplayer" << endl;
-        if (!(cin >> typeMod))
+        if (anniv == 'y' || anniv == 'Y' || anniv == 'n' || anniv == 'N')
         {
-            cout << "Not a valid input RETARD!!!!" << endl;
-            continue;
+            break;
         }
-    } while (typeMod < 1 || typeMod >= 3);
+        else
+        {
+            cout << "Invalid input. Please enter y or n.\n";
+        }
+    }
 
+    while (true) {
+        cout << "What type of mod is it? \n1: Singleplayer \n2: Multiplayer" << endl;
+        cin >> typeMod;
 
+        if (!cin.fail() && typeMod <= 2 && typeMod >= 1)
+        {
+            break;  // valid integer entered
+        } else
+        {
+            cout << "Invalid input. Try again.\n";
+            cin.clear();              // clear error flag
+            cin.ignore(10000, '\n');  // discard bad input
+        }
+    }
 
     cout << "\nWriting..." << endl;
 
@@ -69,7 +78,7 @@ int main()
         File << "type \"multiplayer_only\"" << endl;
     }
 
-    if (anniv == "y")
+    if (anniv == 'y' || anniv == 'Y')
     {
         File << "hd_background \"1\"" << endl;
         File << "animated_title \"1\"" << endl;
